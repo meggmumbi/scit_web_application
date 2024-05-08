@@ -132,7 +132,7 @@ function AppAppBar({ mode, toggleColorMode }) {
             }}
           >
             <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-            <Link to="/dashboard">
+            <Link to="/scit/dashboard">
             <Button color="primary" variant="text" size="small">
               DashBoard
             </Button>
