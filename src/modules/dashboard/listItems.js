@@ -34,7 +34,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Staff" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/scit/activities">
       <ListItemIcon>
         <EventIcon />
       </ListItemIcon>

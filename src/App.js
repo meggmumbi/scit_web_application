@@ -12,6 +12,8 @@ import Department from './modules/Departments/Department';
 import NewDepartment from './modules/Departments/NewDepartment';
 import Staff from './modules/Staff/Staff';
 import NewStaff from './modules/Staff/NewStaff';
+import Activities from './modules/activities/Activities';
+import NewActivity from './modules/activities/NewActivity';
 function App() {
   return (
 
@@ -28,7 +30,9 @@ function App() {
               <Route path="department" element={<Department />} /> 
               <Route path="newDepartment" element={<NewDepartment />} />  
               <Route path="staff" element={<Staff />} /> 
-              <Route path="newStaff" element={<NewStaff />} />   
+              <Route path="newStaff" element={<NewStaff />} />  
+              <Route path="activities" element={<Activities />} /> 
+              <Route path="newActivity" element={<NewActivity />} />   
               </Routes>          
             </Layout>
           }
