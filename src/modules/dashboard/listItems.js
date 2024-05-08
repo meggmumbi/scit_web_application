@@ -28,7 +28,7 @@ export const mainListItems = (
       <ListItemText primary="Programmes" />
     </ListItemButton>
 
-    <ListItemButton>
+    <ListItemButton component={Link} to="/scit/staff">
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>

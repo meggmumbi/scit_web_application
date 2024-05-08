@@ -21,7 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProgrammes, deleteProgramme } from "../../common/apis/scit.js";
+import { getstaff, deleteStaff } from "../../common/apis/staff";
 
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -62,13 +62,13 @@ const themeCustom = createTheme({
   },
 });
 
-const Programme = () => {
+const Staff = () => {
   const tableInstanceRef = useRef(null);
   const [rowCount, setRowCount] = useState(0);
   const [rowSelection, setRowSelection] = useState({});
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [programmesData, setData] = useState([]);
+  const [staffData, setData] = useState([]);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const [filterModel, setFilterModel] = useState({
@@ -87,8 +87,8 @@ const Programme = () => {
 
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: 'getProgrammes',
-    queryFn: getProgrammes,
+    queryKey: 'getstaff',
+    queryFn: getstaff,
 
   });
 
@@ -106,8 +106,8 @@ const Programme = () => {
     setAnchorEl(null);
   };
   const handleEdit = () => {
-    setLocalStorage("programme-detail-row", selectedRow);
-    navigate(`/scit/newProgramme`);
+    setLocalStorage("staff-detail-row", selectedRow);
+    navigate(`/scit/newStaff`);
   };
   const handleToastClose = () => {
     navigate(-1)
@@ -115,11 +115,11 @@ const Programme = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteProgramme(selectedRow.id);
+      await deleteStaff(selectedRow.id);
       await refetch();
       setOpenDeleteModal(false);
 
-      toast.success(`Successfully deleted The Programmee ${selectedRow.name}`, {
+      toast.success(`Successfully deleted staff ${selectedRow.name}`, {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -130,7 +130,7 @@ const Programme = () => {
       });
 
     } catch (error) {
-      console.error('Error deleting Programme', error);
+      console.error('Error deleting Staff', error);
     }
   };
 
@@ -150,15 +150,27 @@ const Programme = () => {
 
       {
         accessorKey: 'name',
-        header: 'Programme Name'
+        header: 'Staff Name'
       },
       {
-        accessorKey: 'programmeType',
-        header: 'Programme Type'
+        accessorKey: 'designation',
+        header: 'Designation'
       },
       {
-        accessorKey: 'description',
-        header: 'Description'
+        accessorKey: 'title',
+        header: 'Title'
+      },
+      {
+        accessorKey: 'specializations',
+        header: 'Specialization'
+      },
+      {
+        accessorKey: 'gender',
+        header: 'Gender'
+      },
+      {
+        accessorKey: 'staffType',
+        header: 'Type'
       }
 
     ],
@@ -204,7 +216,7 @@ const Programme = () => {
               gutterBottom
               sx={{ fontSize: "2.5rem", fontWeight: "bold" }}
             >
-              Programmes
+              Staff
             </Typography>
           </Grid>
 
@@ -212,7 +224,7 @@ const Programme = () => {
           <ThemeProvider theme={tableTheme}>
             <MaterialReactTable
               columns={columns}
-              data={programmesData}
+              data={staffData}
               enableColumnActions={false}
               onRowSelectionChange={setRowSelection} 
               state={{ rowSelection }} 
@@ -322,8 +334,8 @@ const Programme = () => {
                     variant="contained"
                     startIcon={<AddCircleIcon />}
                     onClick={() => {
-                      removeItem('programme-detail-row'); 
-                      navigate("/scit/newProgramme");
+                      removeItem('staff-detail-row'); 
+                      navigate("/scit/newStaff");
                     }}
                     sx={{
                       fontWeight: "bolder",
@@ -334,7 +346,7 @@ const Programme = () => {
                       },
                     }}
                   >
-                    New Programme
+                    New Staff
                   </Button>
 
                 </Box>
@@ -348,11 +360,11 @@ const Programme = () => {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              Delete Programme
+              Delete Staff
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Are you sure you want to delete The Programme?
+                Are you sure you want to delete?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -374,4 +386,4 @@ const Programme = () => {
   );
 }
 
-export default Programme;
+export default Staff;

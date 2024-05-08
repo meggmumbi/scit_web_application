@@ -10,7 +10,8 @@ import Programmes from './modules/Programmes/Programme';
 import NewProgramme from './modules/Programmes/NewProgramme'
 import Department from './modules/Departments/Department';
 import NewDepartment from './modules/Departments/NewDepartment';
-
+import Staff from './modules/Staff/Staff';
+import NewStaff from './modules/Staff/NewStaff';
 function App() {
   return (
 
@@ -25,7 +26,9 @@ function App() {
               <Route path="programmes" element={<Programmes />} /> 
               <Route path="newProgramme" element={<NewProgramme />} /> 
               <Route path="department" element={<Department />} /> 
-              <Route path="newDepartment" element={<NewDepartment />} />   
+              <Route path="newDepartment" element={<NewDepartment />} />  
+              <Route path="staff" element={<Staff />} /> 
+              <Route path="newStaff" element={<NewStaff />} />   
               </Routes>          
             </Layout>
           }
