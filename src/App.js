@@ -7,7 +7,9 @@ import LandingPage from './modules/landingPage/LandingPage';
 import Dashboard from './modules/dashboard/Dashboard';
 import Layout from './common/layout/Layout';
 import Programmes from './modules/Programmes/Programme';
-import NewProgramme from './modules/Programmes/NewProgramme';
+import NewProgramme from './modules/Programmes/NewProgramme'
+import Department from './modules/Departments/Department';
+import NewDepartment from './modules/Departments/NewDepartment';
 
 function App() {
   return (
@@ -21,7 +23,9 @@ function App() {
               <Routes>             
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="programmes" element={<Programmes />} /> 
-              <Route path="newProgramme" element={<NewProgramme />} />   
+              <Route path="newProgramme" element={<NewProgramme />} /> 
+              <Route path="department" element={<Department />} /> 
+              <Route path="newDepartment" element={<NewDepartment />} />   
               </Routes>          
             </Layout>
           }

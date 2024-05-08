@@ -40,7 +40,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Activities" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/scit/department">
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>

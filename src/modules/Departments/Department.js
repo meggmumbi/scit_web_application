@@ -21,7 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProgrammes, deleteProgramme } from "../../common/apis/scit.js";
+import { getDepartments, deleteDepartment } from "../../common/apis/department";
 
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -62,13 +62,13 @@ const themeCustom = createTheme({
   },
 });
 
-const Programme = () => {
+const Department = () => {
   const tableInstanceRef = useRef(null);
   const [rowCount, setRowCount] = useState(0);
   const [rowSelection, setRowSelection] = useState({});
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [programmesData, setData] = useState([]);
+  const [tableData, setData] = useState([]);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const [filterModel, setFilterModel] = useState({
@@ -87,8 +87,8 @@ const Programme = () => {
 
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: 'getProgrammes',
-    queryFn: getProgrammes,
+    queryKey: 'getDepartments',
+    queryFn: getDepartments,
 
   });
 
@@ -106,8 +106,8 @@ const Programme = () => {
     setAnchorEl(null);
   };
   const handleEdit = () => {
-    setLocalStorage("programme-detail-row", selectedRow);
-    navigate(`/scit/newProgramme`);
+    setLocalStorage("row-data", selectedRow);
+    navigate(`/scit/newDepartment`);
   };
   const handleToastClose = () => {
     navigate(-1)
@@ -115,11 +115,11 @@ const Programme = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteProgramme(selectedRow.id);
+      await deleteDepartment(selectedRow.id);
       await refetch();
       setOpenDeleteModal(false);
 
-      toast.success(`Successfully deleted The Programmee ${selectedRow.name}`, {
+      toast.success(`Successfully deleted The Department ${selectedRow.name}`, {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -130,7 +130,7 @@ const Programme = () => {
       });
 
     } catch (error) {
-      console.error('Error deleting Department', error);
+      console.error('Error deleting department Record', error);
     }
   };
 
@@ -150,11 +150,7 @@ const Programme = () => {
 
       {
         accessorKey: 'name',
-        header: 'Programme Name'
-      },
-      {
-        accessorKey: 'programmeType',
-        header: 'Programme Type'
+        header: 'Department Name'
       },
       {
         accessorKey: 'description',
@@ -204,7 +200,7 @@ const Programme = () => {
               gutterBottom
               sx={{ fontSize: "2.5rem", fontWeight: "bold" }}
             >
-              Programmes
+              Departments
             </Typography>
           </Grid>
 
@@ -212,7 +208,7 @@ const Programme = () => {
           <ThemeProvider theme={tableTheme}>
             <MaterialReactTable
               columns={columns}
-              data={programmesData}
+              data={tableData}
               enableColumnActions={false}
               onRowSelectionChange={setRowSelection} 
               state={{ rowSelection }} 
@@ -322,8 +318,8 @@ const Programme = () => {
                     variant="contained"
                     startIcon={<AddCircleIcon />}
                     onClick={() => {
-                      removeItem('programme-detail-row'); 
-                      navigate("/scit/newProgramme");
+                      removeItem('row-data'); 
+                      navigate("/scit/newDepartment");
                     }}
                     sx={{
                       fontWeight: "bolder",
@@ -334,7 +330,7 @@ const Programme = () => {
                       },
                     }}
                   >
-                    New Programme
+                    New Department
                   </Button>
 
                 </Box>
@@ -348,11 +344,11 @@ const Programme = () => {
             aria-describedby="alert-dialog-description"
           >
             <DialogTitle id="alert-dialog-title">
-              Delete Programme
+              Delete Department
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Are you sure you want to delete The Programme?
+                Are you sure you want to delete The Department?
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -374,4 +370,4 @@ const Programme = () => {
   );
 }
 
-export default Programme;
+export default Department;
