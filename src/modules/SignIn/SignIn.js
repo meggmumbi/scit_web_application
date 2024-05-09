@@ -24,6 +24,11 @@ import ForgotPassword from './ForgotPassword';
 import getSignInTheme from './getSignInTheme';
 import ToggleColorMode from './ToggleColorMode';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { postLogin } from "../../common/apis/account";
+import { setLocalStorage } from '../../common/utils/LocalStorage';
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -109,6 +114,8 @@ export default function SignIn() {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
 
+  const postMutation = useMutation({ mutationFn: postLogin });
+
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
@@ -126,14 +133,43 @@ export default function SignIn() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    event.preventDefault();   
+    
+    try {     
+      const data = new FormData(event.currentTarget);
+      const values = {
+        email: data.get('email'),
+        password: data.get('password'),
+        role:"",
+        staffId:""
+      }
 
+      postMutation.mutateAsync(values).then(response => {
+        // Extract role and other user details from login response
+        const { role, email, staffId } = response;
+
+        // Store user information in local storage
+        setLocalStorage('user', response);
+
+        // Redirect based on role
+        if (role === 'staff') {
+            window.location.href = '/scit/dashboard'; // Redirect staff to dashboard
+        } else {
+            window.location.href = '/scit/application';
+        }
+    });
+      } catch (error) {
+        toast.error(error.response.data, {
+          position: "top-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+    };
+  
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
@@ -164,6 +200,7 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={showCustomTheme ? SignInTheme : defaultTheme}>
       <CssBaseline />
+      <ToastContainer/>
       <SignInContainer direction="column" justifyContent="space-between">
         <Stack
           direction="row"

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,15 +7,21 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+import { useNavigate, useParams } from "react-router-dom";
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Card as MuiCard } from '@mui/material';
+import { Card as MuiCard, RadioGroup,Radio } from '@mui/material';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { postSignup } from "../../common/apis/account";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
@@ -108,13 +114,15 @@ export default function SignUp() {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
-
+  const [role, setRole] = useState('student');
+  const [staffId, setStaffId] = useState('');
+  const [staffIdError, setStaffIdError] = useState(false);
+  const navigate = useNavigate();
+  let isValid = true;
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
-    const name = document.getElementById('name');
-
-    let isValid = true;
+      
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
@@ -134,16 +142,26 @@ export default function SignUp() {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
+    
     return isValid;
+  };
+
+  const postMutation = useMutation({ mutationFn: postSignup });
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+    if (event.target.value === 'student') {
+      setStaffId(''); // Reset staffId if role changes to student
+      setStaffIdError(false); // Reset staffId error
+    }
+  };
+
+  const validateStaffId = () => {
+    if (role === 'staff' && !staffId) {
+      setStaffIdError(true);
+    } else {
+      setStaffIdError(false);
+    }
   };
 
   const toggleColorMode = () => {
@@ -156,18 +174,62 @@ export default function SignUp() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
+    if(isValid){
+    try {
+
+      const data = new FormData(event.currentTarget);
+   
+      const values = {
+        role,
+        staffId: data.get('staffId'),
+        email: data.get('email'),
+        password: data.get('password'),
+      }
+
+        postMutation.mutateAsync(values);
+
+      
+      toast.success("You have Successfully created an account with scit.", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        onClose: handleToastClose,
+      });
+    } catch (error) {
+      toast.error(error.response.data, {
+        position: "top-right",
+        autoClose: 10000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  }
+  else{
+    toast.error("Invalid Data Input", {
+      position: "top-right",
+      autoClose: 10000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
     });
+  }
+  };
+
+  const handleToastClose = () => {
+    navigate("/sign-in");
+    
   };
 
   return (
     <ThemeProvider theme={showCustomTheme ? SignUpTheme : defaultTheme}>
       <CssBaseline />
+      <ToastContainer/>
       <SignUpContainer direction="column" justifyContent="space-between">
         <Stack
           direction="row"
@@ -205,25 +267,13 @@ export default function SignUp() {
               onSubmit={handleSubmit}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-              <FormControl>
-                <FormLabel htmlFor="name">Full name</FormLabel>
-                <TextField
-                  autoComplete="name"
-                  name="name"
-                  required
-                  fullWidth
-                  id="name"
-                  placeholder="Jon Snow"
-                  error={nameError}
-                  helperText={nameErrorMessage}
-                  color={nameError ? 'error' : 'primary'}
-                />
-              </FormControl>
+             
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
                   required
                   fullWidth
+                  type="email"
                   id="email"
                   placeholder="your@email.com"
                   name="email"
@@ -250,6 +300,33 @@ export default function SignUp() {
                   color={passwordError ? 'error' : 'primary'}
                 />
               </FormControl>
+              <FormControl>
+                <FormLabel component="legend">Role</FormLabel>
+                <RadioGroup aria-label="role" name="role" value={role} onChange={handleRoleChange}>
+                  <FormControlLabel value="student" control={<Radio />} label="Student" />
+                  <FormControlLabel value="staff" control={<Radio />} label="Staff" />
+                </RadioGroup>
+              </FormControl>
+              {role === 'staff' && (
+                <FormControl>
+                  <FormLabel htmlFor="staffId">Staff ID</FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    id="staffId"
+                    placeholder="Staff ID"
+                    name="staffId"
+                    variant="outlined"
+                    error={staffIdError}
+                    helperText={staffIdError ? 'Staff ID is required for staff role' : ''}
+                    color={staffIdError ? 'error' : 'primary'}
+                    onChange={(e) => {
+                      setStaffId(e.target.value);
+                      validateStaffId();
+                    }}
+                  />
+                </FormControl>
+              )}
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="I want to receive updates via email."
@@ -278,8 +355,7 @@ export default function SignUp() {
                 type="submit"
                 fullWidth
                 variant="outlined"
-                color="secondary"
-                onClick={() => alert('Sign up with Google')}
+                color="secondary"                
                 startIcon={<GoogleIcon />}
               >
                 Sign up with Google
@@ -288,8 +364,7 @@ export default function SignUp() {
                 type="submit"
                 fullWidth
                 variant="outlined"
-                color="secondary"
-                onClick={() => alert('Sign up with Facebook')}
+                color="secondary"                
                 startIcon={<FacebookIcon />}
               >
                 Sign up with Facebook
