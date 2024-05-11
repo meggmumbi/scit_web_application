@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef, useMemo } from "react";
 import PropTypes from 'prop-types';
-import { Grid, Typography, Card, CardContent, Container } from '@mui/material';
+import { Typography, Button, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import CardHeader from '@mui/material/CardHeader';
+import {
+    MaterialReactTable
+  
+  } from 'material-react-table';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -12,9 +14,9 @@ import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import AppAppBar from '../components/AppAppBar';
 import Footer from '../components/Footer';
 import getLPTheme from '../getLPTheme';
-import { getstaff } from "../../../common/apis/staff";
+import { getProgrammes } from "../../../common/apis/scit";
 import { useQuery } from "@tanstack/react-query";
-import Pagination from '@mui/material/Pagination';
+
 
 function decodeBase64Image(base64Image) {
     const byteCharacters = atob(base64Image); // Decode Base64 string
@@ -71,12 +73,15 @@ ToggleCustomTheme.propTypes = {
 };
 
 export default function ProgrammeListPage() {
+    const tableInstanceRef = useRef(null);
     const [mode, setMode] = React.useState('light');
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
+    const [rowSelection, setRowSelection] = useState({});
+    const [showMore, setShowMore] = useState({});
 
-    const [staff, setData] = useState([]);
+    const [programmes, setData] = useState([]);
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
 
@@ -88,10 +93,16 @@ export default function ProgrammeListPage() {
         setShowCustomTheme((prev) => !prev);
     };
 
+    const handleToggleShowMore = (id) => {
+        setShowMore((prevState) => ({
+          ...prevState,
+          [id]: !prevState[id],
+        }));
+      };
 
     const { data, isLoading, error } = useQuery({
-        queryKey: 'getstaff',
-        queryFn: getstaff,
+        queryKey: 'getProgrammes',
+        queryFn: getProgrammes,
     });
 
     useEffect(() => {
@@ -101,14 +112,52 @@ export default function ProgrammeListPage() {
 
     }, [data]);
 
-    const totalPages = Math.ceil(staff.length / perPage);
-
-    // Paginate the staff data
-    const paginatedStaff = staff.slice((page - 1) * perPage, page * perPage);
-
-    const handlePageChange = (event, value) => {
-        setPage(value);
-    };
+    const columns = useMemo(
+        () => [
+    
+          {
+            accessorKey: 'name',
+            header: 'Programme Name'
+          },
+          {
+            accessorKey: 'programmeType',
+            header: 'Programme Type'
+          },
+          {
+            accessorKey: 'description',
+            header: 'Program Requirements', 
+            Cell: ({ cell, row }) => (
+                <Box>
+                  <Typography variant="body2" color="text.primary" component="div">
+                    {showMore[row.id] ? cell.row.original.description : `${cell.row.original.description.slice(0, 100)}...`}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="primary"
+                    onClick={() => handleToggleShowMore(row.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {showMore[row.id] ? 'Show Less' : 'Read More'}
+                  </Typography>
+                </Box>
+              ),
+            },
+          ],
+          [showMore]
+      );
+      const tableTheme = useMemo(
+    
+        () =>
+    
+          createTheme({
+    
+            palette: {
+              background: {
+                default: '#fff'
+              }
+            }
+          })
+      );
 
     return (
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
@@ -122,7 +171,7 @@ export default function ProgrammeListPage() {
                         pt: { xs: 4, sm: 12 },
                         pb: { xs: 8, sm: 16 },
                         position: 'relative',
-                        display: 'flex',
+                       
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: { xs: 3, sm: 6 },
@@ -130,16 +179,85 @@ export default function ProgrammeListPage() {
                 >
                     <Box
                         sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
                             width: { sm: '100%', md: '60%' },
                             textAlign: { sm: 'left', md: 'center' },
                         }}
                     >
-                        <Typography component="h2" variant="h4" color="text.primary">
+                        <Typography component="h2" align="center" variant="h4" color="text.primary">
                             Programmes
                         </Typography>
-                       
-                    </Box>
-                  
+                        
+                        <Typography align="center">
+                       Our university offers a diverse range of programs to cater to the academic needs and career aspirations of our students. Whether you're interested in pursuing certifications, diplomas, undergraduate, or postgraduate studies, we have programs tailored to meet your educational goals.
+                        </Typography>
+                         </Box>
+                        <ThemeProvider theme={tableTheme}>
+                            <MaterialReactTable
+                                columns={columns}
+                                data={programmes}
+                                enableColumnActions={false}
+                                onRowSelectionChange={setRowSelection}
+                                state={{ rowSelection }}
+                                tableInstanceRef={tableInstanceRef}
+                                muiTableHeadCellProps={{
+                                    sx: {
+                                        '& .Mui-TableHeadCell-Content': {
+                                            fontSize: '18px',
+                                            color: '#000',
+                                            fontWeight: 'bold'
+                                        },
+                                    },
+                                }}
+                                muiTableHeadCellFilterTextFieldProps={{
+                                    sx: {
+                                        m: '1rem 0', width: '100%', fontSize: '12px',
+                                        '& .MuiInputBase-root': {
+                                            color: '#0E6073',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            opacity: 0.9
+                                        },
+                                        '& .MuiBox-root': {
+                                            color: '#0E6073',
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            opacity: 0.9
+                                        },
+                                        input: {
+                                            color: '#667085',
+                                            "&::placeholder": {    // <----- Add this.
+                                                opacity: 0.9,
+                                                color: '#0E6073',
+                                            }
+                                        }
+                                    },
+                                    variant: 'outlined'
+                                }}
+                                
+                              
+                                initialState={{
+                                    pagination: {
+                                        pageSize: 10,
+                                        pageIndex: 0
+                                    },
+                                    columnVisibility: { id: false }
+                                }} muiTablePaginationProps={{
+                                    rowsPerPageOptions: [5, 10, 20],
+                                    showFirstButton: false,
+                                    showLastButton: false,
+                                    SelectProps: {
+                                        native: true
+                                    },
+                                    labelRowsPerPage: 'Number of rows visible'
+                                }}
+                                //add custom action buttons to top-left of top toolbar
+                               
+                            />
+                        </ThemeProvider>
+                   
+
                 </Container>
                 <Footer />
             </Box>

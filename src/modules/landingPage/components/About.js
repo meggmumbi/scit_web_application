@@ -127,7 +127,7 @@ export default function AboutUsPage() {
                         }}
                     >
                         <Typography component="h2" variant="h4" color="text.primary">
-                            About Us
+                            Our Mission
                         </Typography>
                         {aboutUs.map((aboutData) => (
                             <div key={aboutData.activityName}>
