@@ -8,7 +8,6 @@ import Markdown from './Markdown';
 function Main(props) {
   const { posts, title } = props;
 
-  console.log("dir posts", posts);
 
   return (
     <Grid

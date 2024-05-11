@@ -141,7 +141,7 @@ export default function StaffListPage() {
                             See both of our Academic and Administration Staff.
                         </Typography>
                     </Box>
-                    <Grid container spacing={2} sx={{ marginTop: "100px" }}>
+                    <Grid container spacing={2}>
                         {paginatedStaff.map((testimonial, index) => (
                             <Grid item xs={12} sm={6} md={4} key={index} sx={{ display: 'flex' }}>
                                 <Card

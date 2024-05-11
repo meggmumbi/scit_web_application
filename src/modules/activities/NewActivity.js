@@ -65,7 +65,9 @@ const  NewActivity = () => {
       endDate: row?.endDate || "",    
       activityType: row?.activityType || "",    
       status: row?.status || "", 
-       
+      vision: row?.vision || "",
+      mission: row?.mission || "",
+
 
     },
     validationSchema: Yup.object().shape({
@@ -340,7 +342,7 @@ const  NewActivity = () => {
                                 <MenuItem value="announcemnets">Announcements</MenuItem>
                                 <MenuItem value="Events">Events</MenuItem>
                                 <MenuItem value="Academic">Academic</MenuItem>
-                                
+                                <MenuItem value="About">About</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -441,6 +443,80 @@ const  NewActivity = () => {
                               />
                             </FormControl>
                           </Grid>  
+                          <Grid item sm={6}>
+                            <FormControl
+                              sx={{ m: 1, width: "100%", marginBottom: "5px" }}
+                              size="medium"
+                            >
+                              <FormLabel
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  fontWeight: "bold",
+                                }}
+                              >Mission</FormLabel>
+                              <TextField
+                                name="mission"
+                                label="Mission Name"
+                                value={formik.values.mission}
+                                error={Boolean(
+                                  formik.touched.mission && formik.errors.mission
+                                )}
+                                fullWidth
+                                helperText={
+                                  formik.touched.mission && formik.errors.mission
+                                }
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                variant="outlined"
+                                disabled={id != undefined}
+                                sx={{
+                                  marginTop: 2,
+                                  '& legend': { display: 'none' },
+                                  '& .MuiInputLabel-shrink': { opacity: 0, transition: "all 0.2s ease-in" }
+
+                                }}
+                                my={2}
+                              />
+                            </FormControl>
+                          </Grid>
+                          <Grid item sm={6}>
+                            <FormControl
+                              sx={{ m: 1, width: "100%", marginBottom: "5px" }}
+                              size="medium"
+                            >
+                              <FormLabel
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  fontWeight: "bold",
+                                }}
+                              >Vision</FormLabel>
+                              <TextField
+                                name="vision"
+                                label="Vision"
+                                value={formik.values.vision}
+                                error={Boolean(
+                                  formik.touched.vision && formik.errors.vision
+                                )}
+                                fullWidth
+                                helperText={
+                                  formik.touched.vision && formik.errors.vision
+                                }
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                variant="outlined"
+                                disabled={id != undefined}
+                                sx={{
+                                  marginTop: 2,
+                                  '& legend': { display: 'none' },
+                                  '& .MuiInputLabel-shrink': { opacity: 0, transition: "all 0.2s ease-in" }
+
+                                }}
+                                my={2}
+                              />
+                            </FormControl>
+                          </Grid>
                         </Grid>
                         <Grid item xl={12} xs={12} md={12}>
                           <Grid

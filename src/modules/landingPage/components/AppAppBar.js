@@ -98,7 +98,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => navigate('about')}
+                onClick={() => navigate('/about')}
                 sx={{ minWidth: 0 }}
               >
                 About Us
@@ -178,19 +178,20 @@ function AppAppBar({ mode, toggleColorMode }) {
                   </IconButton>
                 </Box>
                 <Divider sx={{ my: 3 }} />
-                <MenuItem onClick={() => scrollToSection('features')}>
-                  Features
+                <MenuItem onClick={() => navigate("/")}>Home</MenuItem>
+                <MenuItem  onClick={() => navigate('/about')}>
+                  About Us
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('testimonials')}>
-                  Testimonials
+                <MenuItem onClick={() => navigate('/academicList')}>
+                  Academics
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('highlights')}>
-                  Highlights
+                <MenuItem  onClick={() => navigate("/programmes")}>
+                  Programmes
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('pricing')}>
-                  Pricing
+                <MenuItem  onClick={() => navigate("/staffList")}>
+                  Staff
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
+                
                 <MenuItem>
                 <Link to="/sign-up">
                   <Button color="primary" variant="contained" fullWidth>

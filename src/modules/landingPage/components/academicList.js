@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-import { Grid, Typography, Card, CardContent, Container } from '@mui/material';
+import { Grid, Typography, Card, CardActions, CardContent, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import CardHeader from '@mui/material/CardHeader';
+import Collapse from '@mui/material/Collapse';
+import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -12,21 +12,12 @@ import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import AppAppBar from '../components/AppAppBar';
 import Footer from '../components/Footer';
 import getLPTheme from '../getLPTheme';
-import { getstaff } from "../../../common/apis/staff";
+import { getActivity } from "../../../common/apis/activities";
 import { useQuery } from "@tanstack/react-query";
-import Pagination from '@mui/material/Pagination';
 
-function decodeBase64Image(base64Image) {
-    const byteCharacters = atob(base64Image); // Decode Base64 string
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const imageBlob = new Blob([byteArray], { type: 'image/jpeg' }); // Create Blob from binary array
-    const imageUrl = URL.createObjectURL(imageBlob); // Create object URL from Blob
-    return imageUrl;
-}
+
+
+
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
     return (
@@ -75,10 +66,17 @@ export default function AcademicListPage() {
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
     const defaultTheme = createTheme({ palette: { mode } });
+    const [selectedActivity, setSelectedActivity] = useState(null);
 
-    const [staff, setData] = useState([]);
+    const [activities, setData] = useState([]);
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
+
+    const [expanded, setExpanded] = useState(false);
+
+    const toggleExpanded = () => {
+        setExpanded(!expanded);
+    };
 
     const toggleColorMode = () => {
         setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
@@ -88,10 +86,10 @@ export default function AcademicListPage() {
         setShowCustomTheme((prev) => !prev);
     };
 
-
     const { data, isLoading, error } = useQuery({
-        queryKey: 'getstaff',
-        queryFn: getstaff,
+        queryKey: 'getActivity',
+        queryFn: getActivity,
+
     });
 
     useEffect(() => {
@@ -101,15 +99,25 @@ export default function AcademicListPage() {
 
     }, [data]);
 
-    const totalPages = Math.ceil(staff.length / perPage);
-
-    // Paginate the staff data
-    const paginatedStaff = staff.slice((page - 1) * perPage, page * perPage);
-
-    const handlePageChange = (event, value) => {
-        setPage(value);
+    const handleActivityClick = (activityId) => {
+        setSelectedActivity(activityId === selectedActivity ? null : activityId);
     };
 
+    const academicActivities = activities.filter(activity => activity.activityType === 'Academic');
+
+
+    const getIcon = (activityName) => {
+        if (activityName.toLowerCase().includes('oracle')) {
+            return <img src="/oracle.svg" style={{ height: 50, marginRight: 10 }} />;
+        } else if (activityName.toLowerCase().includes('microsoft')) {
+            return <img src="/microsoft.svg" style={{ height: 70, marginRight: 10 }} />;
+        } else if (activityName.toLowerCase().includes('huawei')) {
+            return <img src="/Huawei.svg" style={{ height: 50, marginRight: 10 }} />;
+        } else if (activityName.toLowerCase().includes('cisco')) {
+            return <img src="/cisco.svg" style={{ height: 50, marginRight: 10 }} />;
+        }
+        return <img src="/school.svg" style={{ height: 50, marginRight: 10 }} />;
+    };
     return (
         <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
             <CssBaseline />
@@ -132,14 +140,64 @@ export default function AcademicListPage() {
                         sx={{
                             width: { sm: '100%', md: '60%' },
                             textAlign: { sm: 'left', md: 'center' },
+                            mb: 4,
                         }}
                     >
                         <Typography component="h2" variant="h4" color="text.primary">
-                            Academics
+                            Academic Excellence
                         </Typography>
-                       
+                        
+                        <Typography variant="body1" color="text.secondary">
+                            Our academic programs are tailored to foster innovation, critical thinking, and scholarly excellence. Dive into a world of knowledge with our diverse range of ongoing academic activities.
+                        </Typography>
                     </Box>
-                  
+                    <Grid container spacing={2}>
+                        {academicActivities.map((activity) => (
+                            <Grid item xs={12} sm={6} md={4} key={activity.id} sx={{ display: 'flex' }}>
+
+                                <Card
+                                    sx={{
+                                        maxWidth: 345,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        flexGrow: 1,
+                                        p: 1,
+                                    }}
+                                >
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            {activity.activityName}
+                                        </Typography>
+                                        {getIcon(activity.activityName)}
+                                        <Typography variant="body2" color="text.secondary">
+                                        <strong>End:</strong>  {new Date(activity.startDate).toLocaleDateString()}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                        <strong>End:</strong> {new Date(activity.endDate).toLocaleDateString()}
+                                        </Typography>
+
+                                        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                                            {expanded ? activity.description : activity.description.slice(0, 80)}
+                                        </Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            onClick={toggleExpanded}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            {expanded ? 'Show Less' : 'Read More'}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small" variant="contained" color="primary">
+                                            Apply Now
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
                 </Container>
                 <Footer />
             </Box>
