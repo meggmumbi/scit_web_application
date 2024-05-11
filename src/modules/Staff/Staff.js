@@ -171,7 +171,28 @@ const Staff = () => {
       {
         accessorKey: 'staffType',
         header: 'Type'
-      }
+      },
+      {
+        accessorKey: 'image', 
+        header: 'Image',
+        Cell: ({ cell }) => {
+          try {
+            console.log("image cell original image value",cell.row.original.image);
+            const byteCharacters = atob(cell.row.original.image); // Decode Base64 string
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const imageBlob = new Blob([byteArray], { type: 'image/jpeg' }); // Create Blob from binary array
+            const imageUrl = URL.createObjectURL(imageBlob); // Create object URL from Blob
+            return <img src={imageUrl} alt="Activity Image" style={{ width: 100, height: 100 }} />;
+          } catch (error) {
+           
+            return <img src="placeholder-image.jpg" alt="Error decoding image" style={{ width: 100, height: 100 }} />;
+          }
+        }
+      }     
 
     ],
     [],

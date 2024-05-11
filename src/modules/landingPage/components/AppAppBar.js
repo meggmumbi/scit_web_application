@@ -87,7 +87,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 size="small"
                 onClick={() => scrollToSection('features')}
               >
-                Features
+                Academics
               </Button>
               <Button
                 variant="text"
@@ -95,7 +95,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 size="small"
                 onClick={() => scrollToSection('testimonials')}
               >
-                Testimonials
+                Programmes
               </Button>
               <Button
                 variant="text"
@@ -103,7 +103,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 size="small"
                 onClick={() => scrollToSection('highlights')}
               >
-                Highlights
+                Staff
               </Button>
               <Button
                 variant="text"

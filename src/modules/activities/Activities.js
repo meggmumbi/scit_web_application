@@ -6,7 +6,7 @@ import {
   Card as MuiCard,
   CardContent as MuiCardContent, Divider,
   Paper as MuiPaper,
-  IconButton,
+  Link,
   Grid,
   Typography,
   useTheme
@@ -70,6 +70,7 @@ const Activities = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [tableData, setData] = useState([]);
   const open = Boolean(anchorEl);
+  const [expandedRows, setExpandedRows] = useState({});
   const navigate = useNavigate();
   const [filterModel, setFilterModel] = useState({
     items: [],
@@ -85,6 +86,12 @@ const Activities = () => {
     setSelectedRow(params);
   };
 
+  const toggleRow = (index) => {
+    setExpandedRows((prevExpandedRows) => ({
+      ...prevExpandedRows,
+      [index]: !prevExpandedRows[index],
+    }));
+  };
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: 'getActivity',
@@ -162,8 +169,22 @@ const Activities = () => {
       },
       {
         accessorKey: 'description',
-        header: 'Description'
+        header: 'Description',
+        // Custom cell renderer to handle long description
+        Cell: ({ cell, rowIndex }) => (
+          <div>
+            {expandedRows[rowIndex] ? (
+              <Typography>{cell.row.original.description}</Typography>
+            ) : (
+              <Typography>{cell.row.original.description.slice(0, 100)}...</Typography>
+            )}
+            <Link onClick={() => toggleRow(rowIndex)}>
+              {expandedRows[rowIndex] ? 'Show Less' : 'Read More'}
+            </Link>
+          </div>
+        )
       },
+   
       {
         accessorKey: 'activityType',
         header: 'Activity Type'
@@ -171,11 +192,32 @@ const Activities = () => {
       {
         accessorKey: 'status',
         header: 'Status'
+      },
+      
+      {
+        accessorKey: 'image', 
+        header: 'Image',
+        Cell: ({ cell }) => {
+          try {
+            console.log("image cell original image value",cell.row.original.image);
+            const byteCharacters = atob(cell.row.original.image); // Decode Base64 string
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const imageBlob = new Blob([byteArray], { type: 'image/jpeg' }); // Create Blob from binary array
+            const imageUrl = URL.createObjectURL(imageBlob); // Create object URL from Blob
+            return <img src={imageUrl} alt="Activity Image" style={{ width: 100, height: 100 }} />;
+          } catch (error) {
+           
+            return <img src="placeholder-image.jpg" alt="Error decoding image" style={{ width: 100, height: 100 }} />;
+          }
+        }
       }
+      
+    ],  [expandedRows]);
 
-    ],
-    [],
-  );
   const tableTheme = useMemo(
 
     () =>

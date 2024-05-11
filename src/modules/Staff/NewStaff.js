@@ -78,6 +78,7 @@ const NewStaff = () => {
   const theme = useTheme();
   const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const [selectedItems, setSelectedItems] = useState([]);
+  const [image, setImageData] = useState(null);
 
   const postMutation = useMutation({ mutationFn: postStaff });
   const updateMutation = useMutation({ mutationFn: updateStaff });
@@ -99,6 +100,7 @@ const NewStaff = () => {
       designation: row?.designation || "",
       gender: row?.gender || "",
       staffType: row?.staffType || "",
+      staffId: row?.staffId || "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Required"),
@@ -108,7 +110,7 @@ const NewStaff = () => {
       designation: Yup.string().required("Required"),
       gender: Yup.string().required("Required"),
       staffType: Yup.string().required("Required"),
-
+      staffId: Yup.string().required("Required"),
     }),
 
     onSubmit: async (values, { resetForm, setSubmitting }) => {
@@ -117,10 +119,16 @@ const NewStaff = () => {
 
         if (row?.id) {
           values.id = row.id;
+          if (image) {
+            values.image = image;
+          }
 
           await updateMutation.mutateAsync(values);
 
         } else {
+          if (image) {
+            values.image = image;
+          }
 
           await postMutation.mutateAsync(values);
 
@@ -151,6 +159,25 @@ const NewStaff = () => {
     navigate("/scit/staff");
 
   };
+
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      const base64String = btoa(
+        new Uint8Array(reader.result)
+          .reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      setImageData(base64String);
+    };
+
+    if (file) {
+      reader.readAsArrayBuffer(file);
+    }
+  };
+
 
 
   return (
@@ -249,9 +276,46 @@ const NewStaff = () => {
                                   color: "#000",
                                   fontWeight: "bold",
                                 }}
+                              >Staff ID</FormLabel>
+                              <TextField
+                                name="staffId"
+                                label="Staff Id"
+                                value={formik.values.staffId}
+                                error={Boolean(
+                                  formik.touched.staffId && formik.errors.staffId
+                                )}
+                                fullWidth
+                                helperText={
+                                  formik.touched.staffId && formik.errors.staffId
+                                }
+                                onBlur={formik.handleBlur}
+                                onChange={formik.handleChange}
+                                variant="outlined"
+                                disabled={id != undefined}
+                                sx={{
+                                  marginTop: 2,
+                                  '& legend': { display: 'none' },
+                                  '& .MuiInputLabel-shrink': { opacity: 0, transition: "all 0.2s ease-in" }
+
+                                }}
+                                my={2}
+                              />
+                            </FormControl>
+                          </Grid>
+                          <Grid item sm={6}>
+                            <FormControl
+                              sx={{ m: 1, width: "100%", marginBottom: "5px" }}
+                              size="medium"
+                            >
+                              <FormLabel
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  fontWeight: "bold",
+                                }}
                               >Date of Birth</FormLabel>
                               <TextField
-                                name="dob"                               
+                                name="dob"
                                 type="date"
                                 value={formik.values.dob}
                                 error={Boolean(
@@ -276,7 +340,7 @@ const NewStaff = () => {
                             </FormControl>
                           </Grid>
 
-                          <Grid item  sm={6}>
+                          <Grid item sm={6}>
                             <FormControl sx={{ m: 1, width: "100%", marginBottom: "5px" }} size="medium">
                               <FormLabel
                                 style={{
@@ -292,7 +356,7 @@ const NewStaff = () => {
                                 multiple
                                 id="checkboxes-tags-demo"
                                 options={specializations}
-                                disableCloseOnSelect  
+                                disableCloseOnSelect
                                 onChange={(event, newValue) => {
                                   setSelectedItems(newValue.map((item) => item.label));
                                   formik.setFieldValue('specializations', newValue.map((item) => item.label).join(',')); // Save selected labels as a comma-separated string
@@ -313,8 +377,8 @@ const NewStaff = () => {
                                 style={{ width: "100%" }}
                                 renderInput={(params) => (
                                   <TextField
-                                   fullWidth
-                                    sx={{                                      
+                                    fullWidth
+                                    sx={{
                                       marginTop: 2,
                                       '& legend': { display: 'none' },
                                       '& .MuiInputLabel-shrink': { opacity: 0, transition: "all 0.2s ease-in" }
@@ -392,6 +456,7 @@ const NewStaff = () => {
                                 my={2}
                               >
                                 <MenuItem value="">--select--</MenuItem>
+                                <MenuItem value="Senior">Senior</MenuItem>
                                 <MenuItem value="Chairman">ChairMan</MenuItem>
                                 <MenuItem value="Chairwoman">Chairwoman</MenuItem>
                                 <MenuItem value="Lecturer">Lecturer</MenuItem>
@@ -468,7 +533,6 @@ const NewStaff = () => {
                                 <MenuItem value="Administrative">Administrative</MenuItem>
                                 <MenuItem value="Academic">Academic</MenuItem>
 
-
                               </Select>
                             </FormControl>
                           </Grid>
@@ -491,7 +555,25 @@ const NewStaff = () => {
                               </RadioGroup>
                             </FormControl>
                           </Grid>
+                          <Grid item sm={6}>
+                            <FormControl sx={{ m: 1, width: "100%", marginBottom: "5px" }} size="medium">
+                              <FormLabel
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                Staff Image
+                              </FormLabel>
 
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                              />
+                            </FormControl>
+                          </Grid>
                         </Grid>
                         <Grid item xl={12} xs={12} md={12}>
                           <Grid

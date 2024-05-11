@@ -48,6 +48,8 @@ const  NewActivity = () => {
   let { id } = useParams();
   const theme = useTheme();
   const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
+  const [image, setImageData] = useState(null);
+
 
   const postMutation = useMutation({ mutationFn: postActivity });
   const updateMutation = useMutation({ mutationFn: updateActivity });
@@ -62,7 +64,8 @@ const  NewActivity = () => {
       startDate: row?.startDate || "",    
       endDate: row?.endDate || "",    
       activityType: row?.activityType || "",    
-      status: row?.status || "",     
+      status: row?.status || "", 
+       
 
     },
     validationSchema: Yup.object().shape({
@@ -71,22 +74,34 @@ const  NewActivity = () => {
         startDate: Yup.string().required("Required"),  
         endDate: Yup.string().required("Required"),  
         activityType: Yup.string().required("Required"),  
-        status: Yup.string().required("Required"),    
-      
+        status: Yup.string().required("Required"),  
+        // image: Yup.mixed().test("fileSize", "Image size too large", (value) => {
+        //   if (value) {
+        //     return value.size <= 5000000; // Adjust the maximum file size as needed
+        //   }
+        //   return true;
+        // }),
+     
     }),
 
     onSubmit: async (values, { resetForm, setSubmitting }) => {
-      console.log(values);
+      
       try {
 
         if (row?.id) {
           values.id = row.id;
-
+          if (image) {
+            values.image = image;
+          }
           await updateMutation.mutateAsync(values);
 
         } else {
-
+          if (image) {
+            values.image = image;
+          }
+          
           await postMutation.mutateAsync(values);
+         
 
         }
         toast.success("Successfully Added a new Activity", {
@@ -115,6 +130,23 @@ const  NewActivity = () => {
     navigate("/scit/activities");
     
   };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+        const base64String = btoa(
+            new Uint8Array(reader.result)
+              .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        );
+        setImageData(base64String);
+    };
+
+    if (file) {
+        reader.readAsArrayBuffer(file);
+    }
+};
 
 
   return (
@@ -307,6 +339,7 @@ const  NewActivity = () => {
                                 <MenuItem value="message">Directors Message</MenuItem>
                                 <MenuItem value="announcemnets">Announcements</MenuItem>
                                 <MenuItem value="Events">Events</MenuItem>
+                                <MenuItem value="Academic">Academic</MenuItem>
                                 
                               </Select>
                             </FormControl>
@@ -344,6 +377,26 @@ const  NewActivity = () => {
                                 <MenuItem value="Past">Past</MenuItem>
                                 
                               </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item sm={6}> 
+                          <FormControl sx={{ m: 1, width: "100%", marginBottom: "5px" }} size="medium">
+                              <FormLabel
+                                style={{
+                                  fontSize: "16px",
+                                  color: "#000",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                Activity Image
+                              </FormLabel>
+                             
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={handleImageChange}
+                                                        />
+                                                   
                             </FormControl>
                           </Grid>
                          

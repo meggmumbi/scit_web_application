@@ -10,6 +10,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import AppAppBar from './components/AppAppBar';
 import Hero from './components/Hero';
+import Main from './Main';
 import LogoCollection from './components/LogoCollection';
 import Highlights from './components/Highlights';
 import Pricing from './components/Pricing';
@@ -18,6 +19,7 @@ import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import getLPTheme from './getLPTheme';
+import Blog from './Blog';
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -79,7 +81,7 @@ export default function LandingPage() {
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-      <Hero />
+      <Blog />
       <Box sx={{ bgcolor: 'background.default' }}>
         <LogoCollection />
         <Features />
@@ -88,10 +90,10 @@ export default function LandingPage() {
         <Divider />
         <Highlights />
         <Divider />
-        <Pricing />
-        <Divider />
-        <FAQ />
-        <Divider />
+        {/* <Pricing />
+        <Divider /> */}
+        {/* <FAQ />
+        <Divider /> */}
         <Footer />
       </Box>
       {/* <ToggleCustomTheme
