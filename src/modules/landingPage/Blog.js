@@ -74,7 +74,7 @@ export default function Blog() {
   }, [data]);
 
   const ongoingEvents = activities.filter(activity => activity.activityType === 'Events' && activity.status === 'Ongoing');
-  const FeaturedEvents = activities.filter(activity =>  activity.status === 'Upcoming');
+  const FeaturedEvents = activities.filter(activity =>  activity.status === 'Upcoming' && activity.activityType != 'Academic');
   const directorsMessage = activities.filter(activity =>  activity.activityType === 'message');
   const pastEvents = activities.filter(activity =>  activity.status === 'Past');
 

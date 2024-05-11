@@ -70,7 +70,7 @@ ToggleCustomTheme.propTypes = {
     toggleCustomTheme: PropTypes.func.isRequired,
 };
 
-export default function StaffListPage() {
+export default function AcademicListPage() {
     const [mode, setMode] = React.useState('light');
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const LPtheme = createTheme(getLPTheme(mode));
@@ -135,61 +135,11 @@ export default function StaffListPage() {
                         }}
                     >
                         <Typography component="h2" variant="h4" color="text.primary">
-                            Our Staff
+                            Academics
                         </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                            See both of our Academic and Administration Staff.
-                        </Typography>
+                       
                     </Box>
-                    <Grid container spacing={2} sx={{ marginTop: "100px" }}>
-                        {paginatedStaff.map((testimonial, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={index} sx={{ display: 'flex' }}>
-                                <Card
-                                    sx={{
-                                        maxWidth: 345,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        flexGrow: 1,
-                                        p: 1,
-                                    }}
-                                >
-                                    <CardContent>
-                                        <Typography variant="h6" color="text.secondary">
-                                            <i>Specializations</i>
-                                        </Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {testimonial.specializations}
-                                        </Typography>
-                                    </CardContent>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between',
-                                            pr: 2,
-                                        }}
-                                    >
-                                        <CardHeader
-
-                                            avatar={<Avatar alt={testimonial.name} src={decodeBase64Image(testimonial.image)} />}
-                                            title={testimonial.name}
-                                            subheader={testimonial.title}
-                                        />
-
-                                    </Box>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={handlePageChange}
-                        color="primary"
-                        size="large"
-                        sx={{ mt: 2, justifyContent: 'center' }}
-                    />
+                  
                 </Container>
                 <Footer />
             </Box>

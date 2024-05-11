@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
+import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,12 +14,14 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ToggleColorMode from './ToggleColorMode';
-
+import Logo from './SitemarkIcon';
 import Sitemark from './SitemarkIcon';
+
+ const logo = 'logo.png';
 
 function AppAppBar({ mode, toggleColorMode }) {
   const [open, setOpen] = React.useState(false);
-
+  const navigate = useNavigate();
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -38,7 +40,10 @@ function AppAppBar({ mode, toggleColorMode }) {
     }
   };
 
+
+
   return (
+
     <AppBar
       position="fixed"
       sx={{
@@ -79,13 +84,30 @@ function AppAppBar({ mode, toggleColorMode }) {
               px: 0,
             }}
           >
-            <Sitemark />
+           <img src="/logo.png" alt="Logo" style={{ height: 30, marginRight: 10 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={() => navigate("/")}
+              >
+                Home
+              </Button>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('features')}
+                onClick={() => navigate('about')}
+                sx={{ minWidth: 0 }}
+              >
+                About Us
+              </Button>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={() => navigate('/academicList')}
               >
                 Academics
               </Button>
@@ -93,7 +115,7 @@ function AppAppBar({ mode, toggleColorMode }) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('testimonials')}
+                onClick={() => navigate("/programmes")}
               >
                 Programmes
               </Button>
@@ -101,27 +123,11 @@ function AppAppBar({ mode, toggleColorMode }) {
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('highlights')}
+                onClick={() => navigate("/staffList")}
               >
                 Staff
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                onClick={() => scrollToSection('pricing')}
-              >
-                Pricing
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                onClick={() => scrollToSection('faq')}
-                sx={{ minWidth: 0 }}
-              >
-                FAQ
-              </Button>
+              </Button>             
+           
             </Box>
           </Box>
           <Box

@@ -4,6 +4,9 @@ import './App.css';
 import SignUp from './modules/signup/SignUp';
 import SignIn from './modules/SignIn/SignIn';
 import StaffListPage from './modules/landingPage/components/stafflist';
+import AcademicListPage from './modules/landingPage/components/academicList';
+import ProgrammeListPage from './modules/landingPage/components/programmesList';
+import AboutUsPage from './modules/landingPage/components/About';
 import LandingPage from './modules/landingPage/LandingPage';
 import Dashboard from './modules/dashboard/Dashboard';
 import Layout from './common/layout/Layout';
@@ -44,6 +47,9 @@ function App() {
         />
         <Route exact path="/" element={<LandingPage />} />
         <Route path="staffList" element={<StaffListPage />} />
+        <Route path="academicList" element={<AcademicListPage />} />
+        <Route path="programmes" element={<ProgrammeListPage />} />
+        <Route path="about" element={<AboutUsPage />} />
          <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
       </Routes>

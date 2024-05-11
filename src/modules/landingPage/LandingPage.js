@@ -82,7 +82,7 @@ export default function LandingPage() {
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Blog />
-      <Box sx={{ bgcolor: 'background.default' }}>
+      {/* <Box sx={{ bgcolor: 'background.default' }}>
         <LogoCollection />
         <Features />
         <Divider />
@@ -90,16 +90,17 @@ export default function LandingPage() {
         <Divider />
         <Highlights />
         <Divider />
-        {/* <Pricing />
-        <Divider /> */}
-        {/* <FAQ />
-        <Divider /> */}
+        <Pricing />
+        <Divider />
+         <FAQ />
+        <Divider />
         <Footer />
-      </Box>
+      </Box> */}
       {/* <ToggleCustomTheme
         showCustomTheme={showCustomTheme}
         toggleCustomTheme={toggleCustomTheme}
       /> */}
+      <Footer />
     </ThemeProvider>
   );
 }

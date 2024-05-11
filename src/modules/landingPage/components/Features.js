@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -8,7 +8,8 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
+import { useQuery } from "@tanstack/react-query";
+import { getActivity } from "../../../common/apis/activities";
 import { styled } from '@mui/material/styles';
 
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
@@ -60,6 +61,21 @@ const Chip = styled(MuiChip)(({ theme, selected }) => ({
 
 export default function Features() {
   const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+
+  const [activities, setData] = useState([]);
+ 
+  const { data, isLoading, error } = useQuery({
+    queryKey: 'getActivity',
+    queryFn: getActivity,
+
+  });
+
+  useEffect(() => {    
+    if (data?.data) {
+      setData(data.data);      
+    }
+
+  }, [data]);
 
   const handleItemClick = (index) => {
     setSelectedItemIndex(index);
