@@ -10,17 +10,35 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import EventIcon from '@mui/icons-material/Event';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { getFromLocalStorage,removeItem } from '../../common/utils/LocalStorage';
+
+
+const getUserRole = () => {
+  const account = getFromLocalStorage("user");
+  return account ? account.role : null;
+};
+
+const handleLogout = () => {
+  // Remove user data from local storage
+  removeItem("user");
+
+ 
+};
 
 export const mainListItems = (
+  
+  
   <React.Fragment>
+    {getUserRole() === "staff" &&(
+      <>
     <ListItemButton component={Link} to="/scit/dashboard">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
-    </ListItemButton>
-   
+    </ListItemButton>   
+
     <ListItemButton component={Link} to="/scit/programmes">
       <ListItemIcon>
         <SchoolIcon />
@@ -52,19 +70,30 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Applications" />
     </ListItemButton>
+    </>
+  )}
+  
+  {getUserRole() === "student" &&(
+    <ListItemButton component={Link} to="/scit/applications">
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Applications" />
+    </ListItemButton>
+  )}
   </React.Fragment>
 );
 
 export const secondaryListItems = (
   <React.Fragment>
     <ListSubheader component="div" inset>
-      Reports
+      Logout
     </ListSubheader>
-    <ListItemButton>
+    <ListItemButton component={Link} to="/sign-in" onClick={handleLogout}>
       <ListItemIcon>
-        <AssignmentIcon />
+        <LogoutIcon />
       </ListItemIcon>
-      <ListItemText primary="Current month" />
+      <ListItemText primary="Log Out" />
     </ListItemButton>
   </React.Fragment>
 );

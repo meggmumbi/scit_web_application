@@ -254,7 +254,7 @@ export default function SignUp() {
           sx={{ height: { xs: '100%', sm: '100dvh' }, p: 2 }}
         >
           <Card>
-            <SitemarkIcon />
+        
             <Typography
               component="h1"
               variant="h4"

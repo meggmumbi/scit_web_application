@@ -84,7 +84,7 @@ function AppAppBar({ mode, toggleColorMode }) {
               px: 0,
             }}
           >
-           <img src="/logo.png" alt="Logo" style={{ height: 30, marginRight: 10 }} />
+           <img src="/logo.png" alt="Logo" style={{ height: 30, marginRight: 10  }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Button
                 variant="text"

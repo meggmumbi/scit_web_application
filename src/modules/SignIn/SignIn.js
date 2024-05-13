@@ -149,13 +149,13 @@ export default function SignIn() {
         const { role, email, staffId } = response;
 
         // Store user information in local storage
-        setLocalStorage('user', response);
+        setLocalStorage('user', response.data);
 
         // Redirect based on role
         if (role === 'staff') {
             window.location.href = '/scit/dashboard'; // Redirect staff to dashboard
         } else {
-            window.location.href = '/scit/application';
+            window.location.href = '/scit/applications';
         }
     });
       } catch (error) {
@@ -225,7 +225,7 @@ export default function SignIn() {
           sx={{ height: { xs: '100%', sm: '100dvh' }, p: 2 }}
         >
           <Card>
-            <SitemarkIcon />
+          
             <Typography
               component="h1"
               variant="h4"

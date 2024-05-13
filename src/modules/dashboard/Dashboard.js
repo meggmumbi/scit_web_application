@@ -1,147 +1,157 @@
-import * as React from 'react';
+import React, { useMemo, useState, useEffect } from "react";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
 
+import { Card, CardContent, Typography, CardHeader,Grid, Avatar } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import PeopleIcon from '@mui/icons-material/People';
+import SchoolIcon from '@mui/icons-material/School';
+import VillaIcon from '@mui/icons-material/Villa';
+import { useQuery } from "@tanstack/react-query";
+import {getApplications} from  '../../common/apis/applications'
+import {getProgrammes} from  '../../common/apis/scit'
+import {getstaff} from  '../../common/apis/staff'
+import {getActivity} from  '../../common/apis/activities'
+import {getDepartments} from  '../../common/apis/department'
 
-
-const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
+const useStyles = makeStyles({
+  card: {
+    minWidth: 275,
+    margin: '1rem',
+    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+    transition: '0.3s',
+    borderRadius: '15px',
+    '&:hover': {
+      boxShadow: '0 8px 16px 0 rgba(0,0,0,0.2)',
     },
-  }),
-);
+  },
+  avatar: {
+    backgroundColor: '#1976d2',
+ 
+  },
+  header: {
+    textAlign: 'center',
+    color: '#1976d2',
+  },
+  content: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+  },
+});
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const [data, setData] = useState([]);
+  // const [staffData, setData] = useState([]);
+  // const [tableData, setData] = useState([]);
+  // const [tableData, setData] = useState([]);
+  const [open, setOpen] = useState(true);
+  const classes = useStyles();
+  
+  const { data : programmesData} = useQuery({
+    queryKey: 'getApplications',
+    queryFn: getApplications,
+  });
+  const { data : staffData } = useQuery({
+    queryKey: 'getstaff',
+    queryFn: getstaff,
+  });
+  const { data : activityData } = useQuery({
+    queryKey: 'getActivity',
+    queryFn: getActivity,
+  });
+  const { data : departmentData } = useQuery({
+    queryKey: 'getDepartments',
+    queryFn: getDepartments,
+  });
+  const { data : programmes } = useQuery({
+    queryKey: 'getProgrammes',
+    queryFn: getProgrammes,
+  });
+
+  useEffect(() => {      
+    if (programmesData?.data) {
+      setData(programmesData.data);    
+    }
+  }, [programmesData]);
+ 
+  
+  const cardInfo = [
+    { title: 'Activities', value: `${activityData?.data.length}`, icon: <AssessmentIcon /> },
+    { title: 'Staff', value: `${staffData?.data.length}`, icon: <PeopleIcon /> },
+    { title: 'Programmes', value: `${programmes?.data.length}`, icon: <SchoolIcon /> },
+    { title: 'Department', value: `${departmentData?.data.length}`, icon: <VillaIcon /> },
+  ];
+
+  const columns = useMemo(
+    () => [
+
+      {
+        accessorKey: 'fullName',
+        header: 'Full Name',
+        size: 150
+      },
+      {
+        accessorKey: 'email',
+        header: 'Email',
+        size: 150,
+      },
+      {
+        accessorKey: 'address',
+        header: 'Address',
+        size: 150,
+      },
+      {
+        accessorKey: 'qualifications',
+        header: 'Qualifications',
+        size: 150,
+      }
+
+    ],
+    [],
+  );
+
+  const table = useMaterialReactTable({
+    columns,
+    data,
+  });
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: 'flex' }}>
-      <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
+      <Box sx={{ display: 'flex' }}>       
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
+          <Grid maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              {cardInfo.map((info, index) => (
+                <Card key={index} className={classes.card}>
+                  <CardHeader
+                    avatar={
+                      <Avatar className={classes.avatar}>
+                        {info.icon}
+                      </Avatar>
+                    }
+                    title={info.title}
+                    titleTypographyProps={{ align: 'center' }}
+                  />
+                  <CardContent>
+                    <Typography variant="h5" component="div" align="center">
+                      {info.value}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
            
-          </Container>
-        </Box>
+           <MaterialReactTable table={table}/>
+          </Grid>
+       
       </Box>
     </ThemeProvider>
   );

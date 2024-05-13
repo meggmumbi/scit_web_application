@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Link from '@mui/material/Link';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
@@ -17,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from '../../modules/dashboard/listItems';
+import AccountPopover from './account-popover';
 
 
 
@@ -104,7 +104,7 @@ function Layout({ children }) {
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open} sx={{backgroundColor:"#4ab7e0"}}>
+        <AppBar position="absolute" open={!open} sx={{ backgroundColor: "#4ab7e0" }}>
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
@@ -117,7 +117,7 @@ function Layout({ children }) {
               onClick={toggleDrawer}
               sx={{
                 marginRight: '36px',
-                ...(open && { display: 'none' }),
+                ...(!open && { display: 'none' }),
               }}
             >
               <MenuIcon />
@@ -131,14 +131,10 @@ function Layout({ children }) {
             >
               SCIT
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <AccountPopover />
           </Toolbar>
         </AppBar>
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent" open={!open}>
           <Toolbar
             sx={{
               display: 'flex',
@@ -166,7 +162,7 @@ function Layout({ children }) {
       </Box>
       <Box
         sx={{
-          
+
           marginTop: "auto",
           p: 4,
         }}
