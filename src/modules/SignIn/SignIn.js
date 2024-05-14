@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,8 +14,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { Card as MuiCard } from '@mui/material';
+import { Card as MuiCard, InputAdornment,IconButton } from '@mui/material';
 import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
@@ -104,17 +105,31 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn() {
-  const [mode, setMode] = React.useState('light');
-  const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+  const [mode, setMode] = useState('light');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCustomTheme, setShowCustomTheme] = useState(true);
   const defaultTheme = createTheme({ palette: { mode } });
   const SignInTheme = createTheme(getSignInTheme(mode));
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [open, setOpen] = React.useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const postMutation = useMutation({ mutationFn: postLogin });
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleChange = (event) => {
+    setRememberMe(event.target.checked);
+  };
 
   const toggleColorMode = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
@@ -157,6 +172,16 @@ export default function SignIn() {
         } else {
             window.location.href = '/scit/applications';
         }
+    }).catch(error =>{
+      console.log(error);
+      toast.error(`An error occurred. Please try again later.${error.response.data}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     });
       } catch (error) {
         toast.error(error.response.data, {
@@ -270,21 +295,14 @@ export default function SignIn() {
                   }}
                 >
                   <FormLabel htmlFor="password">Password</FormLabel>
-                  <Link
-                    component="button"
-                    onClick={handleClickOpen}
-                    variant="body2"
-                    sx={{ alignSelf: 'baseline' }}
-                  >
-                    Forgot your password?
-                  </Link>
+                 
                 </Box>
                 <TextField
                   error={passwordError}
                   helperText={passwordErrorMessage}
                   name="password"
                   placeholder="••••••"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
                   autoFocus
@@ -292,13 +310,27 @@ export default function SignIn() {
                   fullWidth
                   variant="outlined"
                   color={passwordError ? 'error' : 'primary'}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}                
                 />
               </FormControl>
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox value="remember" color="primary" checked={rememberMe}
+                onChange={handleChange} />}
                 label="Remember me"
-              />
-              <ForgotPassword open={open} handleClose={handleClose} />
+              />             
               <Button
                 type="submit"
                 fullWidth

@@ -49,6 +49,12 @@ const  NewActivity = () => {
   const theme = useTheme();
   const isLgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const [image, setImageData] = useState(null);
+  const [showMissionAndVision, setShowMissionAndVision] = useState(false);
+
+  const handleActivityTypeChange = (event) => {
+    const selectedActivityType = event.target.value;
+    setShowMissionAndVision(selectedActivityType === 'About');
+  };
 
 
   const postMutation = useMutation({ mutationFn: postActivity });
@@ -327,7 +333,10 @@ const  NewActivity = () => {
                                 value={formik.values.activityType}
                                 error={Boolean(formik.touched.activityType && formik.errors.activityType)}
                                 fullWidth
-                                onChange={formik.handleChange}
+                                onChange={(event) => {
+                                  formik.handleChange(event);
+                                  handleActivityTypeChange(event);
+                                }}
                                 onBlur={formik.handleBlur}
                                 variant="outlined"
                                 sx={{
@@ -443,6 +452,8 @@ const  NewActivity = () => {
                               />
                             </FormControl>
                           </Grid>  
+                          {showMissionAndVision && (
+                            <>
                           <Grid item sm={6}>
                             <FormControl
                               sx={{ m: 1, width: "100%", marginBottom: "5px" }}
@@ -517,6 +528,8 @@ const  NewActivity = () => {
                               />
                             </FormControl>
                           </Grid>
+                          </>
+                          )}
                         </Grid>
                         <Grid item xl={12} xs={12} md={12}>
                           <Grid
