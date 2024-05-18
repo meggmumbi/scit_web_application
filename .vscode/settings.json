@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/bfb0e8c0-e965-4154-9a7f-938b63ef6eac/resourceGroups/reactapp-RG/providers/Microsoft.Web/sites/SCITWebsite",
+    "appService.deploySubpath": "build"
+}
