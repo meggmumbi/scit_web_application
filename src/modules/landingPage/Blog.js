@@ -93,6 +93,7 @@ export default function Blog() {
   });
 
   const mainFeaturedPost = ongoingEvents.map(event => ({
+    id: event.id,
     title: event.activityName,
     description: event.description,
     image: decodeBase64Image(event.image), // Decode base64 image
@@ -102,6 +103,7 @@ export default function Blog() {
 
   const archives = pastEvents.map(event => ({
     title: event.activityName,
+    id: event.id,
     url: ''
   }))
 
@@ -112,6 +114,7 @@ export default function Blog() {
   }));
 
   const featuredPosts = FeaturedEvents.map(event => ({   
+    id: event.id,
     date: event.startDate,   
     title: event.activityName,
     description: event.description,

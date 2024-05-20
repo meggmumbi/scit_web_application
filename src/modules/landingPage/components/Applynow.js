@@ -1,13 +1,13 @@
-import React, { useState, useEffect,useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
-import { Typography, Button, Container,Grid, CardContent,Card,Paper } from '@mui/material';
+import { Typography, Button, Container, Grid, CardContent, Card, Paper } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import {
-    MaterialReactTable
-  
-  } from 'material-react-table';
+  MaterialReactTable
+
+} from 'material-react-table';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -22,69 +22,69 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
-    return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100dvw',
-                position: 'fixed',
-                bottom: 24,
-            }}
-        >
-            <ToggleButtonGroup
-                color="primary"
-                exclusive
-                value={showCustomTheme}
-                onChange={toggleCustomTheme}
-                aria-label="Toggle design language"
-                sx={{
-                    backgroundColor: 'background.default',
-                    '& .Mui-selected': {
-                        pointerEvents: 'none',
-                    },
-                }}
-            >
-                <ToggleButton value>
-                    <AutoAwesomeRoundedIcon sx={{ fontSize: '20px', mr: 1 }} />
-                    Custom theme
-                </ToggleButton>
-                <ToggleButton value={false}>Material Design 2</ToggleButton>
-            </ToggleButtonGroup>
-        </Box>
-    );
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100dvw',
+        position: 'fixed',
+        bottom: 24,
+      }}
+    >
+      <ToggleButtonGroup
+        color="primary"
+        exclusive
+        value={showCustomTheme}
+        onChange={toggleCustomTheme}
+        aria-label="Toggle design language"
+        sx={{
+          backgroundColor: 'background.default',
+          '& .Mui-selected': {
+            pointerEvents: 'none',
+          },
+        }}
+      >
+        <ToggleButton value>
+          <AutoAwesomeRoundedIcon sx={{ fontSize: '20px', mr: 1 }} />
+          Custom theme
+        </ToggleButton>
+        <ToggleButton value={false}>Material Design 2</ToggleButton>
+      </ToggleButtonGroup>
+    </Box>
+  );
 }
 
 ToggleCustomTheme.propTypes = {
-    showCustomTheme: PropTypes.shape({
-        valueOf: PropTypes.func.isRequired,
-    }).isRequired,
-    toggleCustomTheme: PropTypes.func.isRequired,
+  showCustomTheme: PropTypes.shape({
+    valueOf: PropTypes.func.isRequired,
+  }).isRequired,
+  toggleCustomTheme: PropTypes.func.isRequired,
 };
 
 export default function ApplyNowPage() {
-    const tableInstanceRef = useRef(null);
-    const [mode, setMode] = React.useState('light');
-    const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-    const LPtheme = createTheme(getLPTheme(mode));
-    const defaultTheme = createTheme({ palette: { mode } });
-    const navigate = useNavigate();
+  const tableInstanceRef = useRef(null);
+  const [mode, setMode] = React.useState('light');
+  const [showCustomTheme, setShowCustomTheme] = React.useState(true);
+  const LPtheme = createTheme(getLPTheme(mode));
+  const defaultTheme = createTheme({ palette: { mode } });
+  const navigate = useNavigate();
 
 
-    const toggleColorMode = () => {
-        setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
-    };
+  const toggleColorMode = () => {
+    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
-    const toggleCustomTheme = () => {
-        setShowCustomTheme((prev) => !prev);
-    };
-      
-    return (
-        <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
-            <CssBaseline />
-            <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-            <Box sx={{ bgcolor: 'background.default', py: 8, mt:10 }}>
+  const toggleCustomTheme = () => {
+    setShowCustomTheme((prev) => !prev);
+  };
+
+  return (
+    <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
+      <CssBaseline />
+      <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+      <Box sx={{ bgcolor: 'background.default', py: 8, mt: 10 }}>
         <Container maxWidth="lg">
           {/* Hero Section */}
           <Box sx={{ mb: 6 }}>
@@ -193,6 +193,6 @@ export default function ApplyNowPage() {
         </Container>
         <Footer />
       </Box>
-        </ThemeProvider>
-    );
+    </ThemeProvider>
+  );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import PropTypes from 'prop-types';
-import { Typography, Button, Container } from '@mui/material';
+import { Typography, Button,Grid, Container } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import {
@@ -153,14 +153,14 @@ export default function ProgrammeListPage() {
             <CssBaseline />
             <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
 
-            <Box sx={{ bgcolor: 'background.default' }}>
+            <Box sx={{ bgcolor: 'background.default',marginTop:"50px" }}>
                 <Container
                     id="testimonials"
                     sx={{
                         pt: { xs: 4, sm: 12 },
                         pb: { xs: 8, sm: 16 },
                         position: 'relative',
-
+                        
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: { xs: 3, sm: 6 },
@@ -178,10 +178,11 @@ export default function ProgrammeListPage() {
                             Programmes
                         </Typography>
 
-                        <Typography>
+                        <Typography >
                             Our university offers a diverse range of programs to cater to the academic needs and career aspirations of our students. Whether you're interested in pursuing certifications, diplomas, undergraduate, or postgraduate studies, we have programs tailored to meet your educational goals.
                         </Typography>
                     </Box>
+                   
                     <ThemeProvider theme={tableTheme}>
                         <MaterialReactTable
                             columns={columns}
@@ -245,6 +246,7 @@ export default function ProgrammeListPage() {
 
                         />
                     </ThemeProvider>
+                   
 
                 </Container>
                 <Footer />

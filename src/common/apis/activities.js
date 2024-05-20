@@ -34,3 +34,12 @@ export const getActivity = async ({ queryKey }) => {
   return await axios.get(url);
 };
 
+
+export const getActivityById = async (id) => {
+
+  let url = `${apiRoutes.scit_activity}/${id}`;
+  
+ 
+  return await axios.get(url);
+};
+

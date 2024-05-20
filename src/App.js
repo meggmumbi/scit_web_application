@@ -9,6 +9,7 @@ import StaffListPage from './modules/landingPage/components/stafflist';
 import AcademicListPage from './modules/landingPage/components/academicList';
 import ProgrammeListPage from './modules/landingPage/components/programmesList';
 import AboutUsPage from './modules/landingPage/components/About';
+import ReadMorePage from './modules/landingPage/components/readMore';
 import LandingPage from './modules/landingPage/LandingPage';
 import Dashboard from './modules/dashboard/Dashboard';
 import Layout from './common/layout/Layout';
@@ -109,6 +110,7 @@ function App() {
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
         <Route path="apply-now" element={<ApplyNowPage />} />
+        <Route path="read-more/:postId" element={<ReadMorePage />} />
       </Routes>
     </Router>
   );
