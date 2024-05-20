@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 're
 import './App.css';
 import SignUp from './modules/signup/SignUp';
 import SignIn from './modules/SignIn/SignIn';
+import ApplyNowPage from './modules/landingPage/components/Applynow';
 import StaffListPage from './modules/landingPage/components/stafflist';
 import AcademicListPage from './modules/landingPage/components/academicList';
 import ProgrammeListPage from './modules/landingPage/components/programmesList';
@@ -107,6 +108,7 @@ function App() {
         <Route path="about" element={<AboutUsPage />} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
+        <Route path="apply-now" element={<ApplyNowPage />} />
       </Routes>
     </Router>
   );

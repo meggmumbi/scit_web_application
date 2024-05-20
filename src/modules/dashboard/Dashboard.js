@@ -148,7 +148,12 @@ export default function Dashboard() {
                 </Card>
               ))}
             </div>
-           
+            <div style={{ display: 'flex', marginTop:10,marginBottom:10 }}>
+            <Typography variant="h5" component="div" >
+                            Student Applications
+            </Typography>
+
+            </div>
            <MaterialReactTable table={table}/>
           </Grid>
        

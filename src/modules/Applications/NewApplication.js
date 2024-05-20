@@ -158,7 +158,7 @@ const NewApplication = () => {
       address: row?.address || "",
 
       religion: row?.religion || "",
-
+      paymentMethod: row?.paymentMethod || "",
       qualifications: row?.qualifications || "",
 
     },
@@ -175,7 +175,7 @@ const NewApplication = () => {
       // postalCode: Yup.string().required("Required"),
       // country: Yup.string().required("Required"),
       qualifications: Yup.string().required("Required"),
-
+      paymentMethod: Yup.string().required("Required")
     }),
 
     onSubmit: async (values, { resetForm, setSubmitting }) => {
@@ -638,6 +638,48 @@ const NewApplication = () => {
 
 
             </Grid>
+            <Grid
+              container
+              spacing={5}
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="flex-start"
+            >
+            <Grid item sm={6}>
+                <FormControl sx={{ m: 1, width: "100%", marginBottom: "5px" }} size="medium">
+                  <FormLabel
+                    style={{
+                      fontSize: "16px",
+                      color: "#000",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Payment Method
+                  </FormLabel>
+                  <Select
+                    name="paymentMethod"
+                    label="Payment Method"
+                    value={formik.values.paymentMethod}
+                    error={Boolean(formik.touched.paymentMethod && formik.errors.paymentMethod)}
+                    fullWidth
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    variant="outlined"
+                    sx={{
+                      marginTop: 2,
+                      '& legend': { display: 'none' },
+                      '& .MuiInputLabel-shrink': { opacity: 0, transition: "all 0.2s ease-in" }
+                    }}
+                    my={2}
+                  >
+                    <MenuItem value="">--select--</MenuItem>
+                    <MenuItem value="Direct To the University">Direct To the University</MenuItem>
+                    <MenuItem value="M-Pesa">M-Pesa</MenuItem>
+                   
+                  </Select>
+                </FormControl>
+              </Grid>
+              </Grid>
           </Box>
         );
       default:

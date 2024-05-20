@@ -107,7 +107,7 @@ function Layout({ children }) {
         <AppBar position="absolute" open={!open} sx={{ backgroundColor: "#4ab7e0" }}>
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
+              pr: '24px', 
             }}
           >
             <IconButton
@@ -122,10 +122,10 @@ function Layout({ children }) {
             >
               <MenuIcon />
             </IconButton>
+            <img src="/logo.png" alt="SCIT Logo" style={{ height: '50px', marginRight: '20px' }} />
             <Typography
               component="h1"
               variant="h6"
-
               noWrap
               sx={{ flexGrow: 1 }}
             >

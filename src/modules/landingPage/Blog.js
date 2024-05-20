@@ -18,9 +18,19 @@ import Footer from './Footer';
 
 
 const sidebar = {
-  title: 'About',
+  title: 'Contact Us',
   description:
-    'Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.',
+    `WRITE TO US THROUGH:
+    The Director 
+    School of Computing and Information Technology
+    P.O. BOX (bold) 62000-010000
+    NAIROBI – KENYA
+    
+    CALL US ON :
+    067-5870001/4
+    
+    EMAIL US ON :
+    director@scit.jkuat.ac.ke`,
   archives: [
     { title: 'March 2020', url: '#' },
     { title: 'February 2020', url: '#' },
@@ -76,7 +86,11 @@ export default function Blog() {
   const ongoingEvents = activities.filter(activity => activity.activityType === 'Events' && activity.status === 'Ongoing');
   const FeaturedEvents = activities.filter(activity =>  activity.status === 'Upcoming' && activity.activityType != 'Academic');
   const directorsMessage = activities.filter(activity =>  activity.activityType === 'message');
-  const pastEvents = activities.filter(activity =>  activity.status === 'Past');
+  const pastEvents = activities.filter(activity => {
+    const endDate = new Date(activity.endDate); // Use endDate to determine if the event is past
+    const currentDate = new Date(); 
+    return endDate < currentDate; // Compare endDate with currentDate
+  });
 
   const mainFeaturedPost = ongoingEvents.map(event => ({
     title: event.activityName,
@@ -85,6 +99,11 @@ export default function Blog() {
     imageText: event.activityName,
     linkText: 'Continue reading…',
   }));
+
+  const archives = pastEvents.map(event => ({
+    title: event.activityName,
+    url: ''
+  }))
 
   const directorMessage = directorsMessage.map(event => ({
     title: event.activityName,
@@ -116,12 +135,16 @@ export default function Blog() {
           </Grid>
           <Grid container spacing={5} sx={{ mt: 3 }}>
             <Main title="Director's Message" posts={directorMessage} />
+            
+           
             <Sidebar
               title={sidebar.title}
               description={sidebar.description}
-              archives={sidebar.archives}
+              archives={archives}
               social={sidebar.social}
             />
+          
+          
           </Grid>
         </main>
       </Container>

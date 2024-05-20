@@ -126,7 +126,15 @@ function AppAppBar({ mode, toggleColorMode }) {
                 onClick={() => navigate("/staffList")}
               >
                 Staff
-              </Button>             
+              </Button>   
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={() => navigate("/apply-now")}
+              >
+                Apply
+              </Button>          
            
             </Box>
           </Box>
@@ -191,7 +199,9 @@ function AppAppBar({ mode, toggleColorMode }) {
                 <MenuItem  onClick={() => navigate("/staffList")}>
                   Staff
                 </MenuItem>
-                
+                <MenuItem  onClick={() => navigate("/apply-now")}>
+                  Apply now
+                </MenuItem>
                 <MenuItem>
                 <Link to="/sign-up">
                   <Button color="primary" variant="contained" fullWidth>
