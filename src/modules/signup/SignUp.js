@@ -187,19 +187,31 @@ export default function SignUp() {
         password: data.get('password'),
       }
 
-        postMutation.mutateAsync(values);
+      postMutation.mutateAsync(values).then(response => {
+       
+        toast.success("You have Successfully created an account with scit.", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          onClose: handleToastClose,
+        });
 
-      
-      toast.success("You have Successfully created an account with scit.", {
+       
+    }).catch(error =>{
+      console.log(error);
+      toast.error(`An error occurred. Please try again later.${error.response.data[0].description}`, {
         position: "top-right",
-        autoClose: 1000,
+        autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        onClose: handleToastClose,
       });
-    } catch (error) {
+    });
+      } catch (error) {
       toast.error(error.response.data, {
         position: "top-right",
         autoClose: 10000,
